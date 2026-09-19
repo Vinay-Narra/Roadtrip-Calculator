@@ -1,0 +1,110 @@
+# Roadtrip calculator script
+
+
+def get_trip_cost():
+    print("\n--- trip cost ---")
+    try:
+        # km
+        dist = float(input("Distance: "))
+        # km per liter
+        milage = float(input("Mileage (km/L): "))
+        price = float(input("Fuel price (Rs/L): "))
+
+        # check for bad inputs
+        if dist < 0 or milage <= 0 or price < 0:
+            print("bro enter real numbers")
+            return 0, 0
+
+        needed = dist / milage
+        cost = needed * price
+
+        print(f"Fuel needed: {round(needed, 1)}L")
+        print(f"Cost: Rs. {round(cost, 2)}")
+        return dist, cost
+
+    except:
+        print("Error: numbers only pls")
+        return 0, 0
+
+
+def do_stops():
+    print("\n--- stops ---")
+    # loop till they enter a valid number of stops
+    while True:
+        try:
+            num = int(input("How many stops/segments? "))
+            if num > 0:
+                break
+            print("must be at least 1")
+        except:
+            print("invalid number")
+
+    total = 0
+    for i in range(num):
+        while True:
+            try:
+                d = float(input(f"Segment {i+1} distance (km): "))
+                if d >= 0:
+                    total += d
+                    break
+                print("can't be negative")
+            except:
+                print("numbers only")
+
+    print(f"Total distance from stops: {total} km")
+    return total
+
+
+def get_extras():
+    print("\n--- extra costs ---")
+    try:
+        # just add them up on the fly
+        tolls = float(input("Tolls: ") or 0)
+        parking = float(input("Parking: ") or 0)
+        food = float(input("Food/Other: ") or 0)
+
+        tot = tolls + parking + food
+        print(f"Extras total: Rs. {tot}")
+        return tot
+    except ValueError:
+        print("failed to parse expenses")
+        return 0
+
+
+def main():
+    # keep track of everything for a final summary
+    total_dist = 0
+    total_fuel_cost = 0
+    extra_costs = 0
+
+    while True:
+        print("\n=== ROADTRIP CALC ===")
+        print("1) Calculate Base Trip Cost")
+        print("2) Calculate Distance via Stops")
+        print("3) Log Extra Expenses")
+        print("4) View Grand Total & Exit")
+
+        ch = input("> ")
+
+        if ch == "1":
+            d, c = get_trip_cost()
+            total_dist = d  # overwrite if they just do basic calc
+            total_fuel_cost = c
+        elif ch == "2":
+            total_dist = do_stops()
+        elif ch == "3":
+            extra_costs = get_extras()
+        elif ch == "4":
+            print("\n=== TRIP SUMMARY ===")
+            print(f"Total Distance: {total_dist} km")
+            print(f"Fuel Cost: Rs. {total_fuel_cost}")
+            print(f"Other Expenses: Rs. {extra_costs}")
+            print(f"GRAND TOTAL: Rs. {total_fuel_cost + extra_costs}")
+            print("\nBye!")
+            break
+        else:
+            print("invalid choice, pick 1-4")
+
+
+if __name__ == "__main__":
+    main()
